@@ -12,5 +12,7 @@ def post():
 templates = Jinja2Templates(directory="templates")
 
 @router.get("/", response_class=HTMLResponse)
-async def admin_panel(request: Request):
-    return templates.TemplateResponse("user.html", {"request": request, "title": "Admin Panel", "message": "Hello, Admin!"})
+async def index(request: Request):
+    return templates.TemplateResponse("user.html", {"request": request})
+
+

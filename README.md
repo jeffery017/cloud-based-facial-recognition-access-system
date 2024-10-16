@@ -1,6 +1,6 @@
 # cloud-based-facial-recognition-access-system
 
-# API Define
+# API Definition
 
 - /unlock
 - /user
@@ -9,37 +9,54 @@
   - /reservation
 - /admin
 
-# POST /unlock/
+# /unlock
 
 ateway send data to the server, to validate if user has access
 
-request:
-
-- embedding: list[float]
-- user_id: int
-- lock_id: int
-- timestamp: float
-
-response:
-
-- user_id: int
-- embedding: list[float]
-- session:
-  - user_id: int
+- method: POST
+- request data:
+  - embedding: list[float]
+  - user_id?: int
   - lock_id: int
-  - startAt: float
-  - endAt: float
+  - timestamp: float
+- response data:
+  - status: str
+  - user_id?: int
+  - embedding?: list[float]
+  - session?:
+    - user_id: int
+    - lock_id: int
+    - startAt: float
+    - endAt: float
 
-# POST /user/register/
+# /user
 
-register user
-data:
+user interface
 
-- first_name
-- last_name
-- password
-- embedding: nparray
+- method: GET
+- response: HTML
 
-POST /user
+# /user/register
 
-POST /reservation/
+user registration
+
+- method: POST
+- register user
+- request data:
+  - first_name
+  - last_name
+  - password
+  - embedding: nparray
+
+# POST /reservation/
+
+room reservation
+
+- method: POST
+- request data:
+  - user_id
+  - lock_id
+  - startAt
+  - endAt
+- response data:
+  -

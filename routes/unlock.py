@@ -3,6 +3,7 @@ from fastapi import BackgroundTasks
 from pydantic import BaseModel
 import numpy as np
 from numpy.typing import NDArray
+from typing import Optional
 
 debug = 0
 
@@ -24,15 +25,16 @@ class LogData(BaseModel):
     result: str
 
 class RequestData(BaseModel):
-    user_id: int
+    user_id: Optional[int] = 0
     lock_id: int
     timestamp: float
     embedding: list
 
 class ResponseData(BaseModel):
-    user_id: int
-    embedding: list
-    session: SessionData
+    status: str
+    user_id: Optional[int]
+    embedding: Optional[list]
+    session: Optional[SessionData]
 
 
 router = APIRouter()
@@ -42,8 +44,8 @@ async def unlock(data: RequestData, background_tasks: BackgroundTasks):
     logd(f'data: {data}')
     # parse request data
     embedding = np.array(data.embedding)
-    
-    user_id = data.user_id
+    if data.user_id:
+        user_id = data.user_id
     lock_id = data.lock_id 
     logd(f'user_id: {user_id}')
     logd(f'lock_id: {lock_id}')
