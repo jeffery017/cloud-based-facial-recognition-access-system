@@ -17,10 +17,17 @@ async def index(request: Request):
     return templates.TemplateResponse("user.html", {"request": request})
 
 
+@router.get("/login", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("user_login.html", {"request": request})
+
+
 
 
 @router.get("/reservation",  response_class=HTMLResponse)
 async def reservation(request:Request):
+    # if request["login"] == "True":
+    #     pass # user is login
     today = datetime.now()
     dates = [(today + datetime.timedelta(days=i)).strftime("%Y/%m/%d") for i in range(14)]
     available_sessions = list(range(24))
