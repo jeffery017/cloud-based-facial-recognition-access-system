@@ -68,6 +68,9 @@ async def unlock(data: RequestData, background_tasks: BackgroundTasks):
     logd(response)
     return response
 
+
+
+
 def checkEmbeddingType(embedding):
     return True
 

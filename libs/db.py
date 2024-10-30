@@ -97,7 +97,6 @@ response = client.query_points(
 )
 
 
-
 for point in response.points:
     uuid = point.payload.get("uuid")
     lock_id = point.payload.get("lock_id")
