@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    html {
+        background-color: #eee;
+    }
+    * {
+        margin: 0; 
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        box-sizing: border-box;
+        color: #333;
+        text-decoration: none;
+    }
+    .container {
+        margin: 0 auto; 
+        max-width: 500px;
+        background-color: #fefefe;
+        height: 100vh;
+        padding: 2em;
+    } 
+    .managementItem {
+        list-style-type: none;
+        background-color: #eeeeee;
+        border-radius: 10px;
+        margin: 1em 0;
+    }
+    .managementItem:hover {
+        background-color: #e3e3e3;
+    }
+    .managementItem a{
+        display: block;
+        text-decoration: none;
+        padding: 0.8em;  
+        text-align: center;
+    }
+    #submitBtn {
+        margin: auto; 
+        font-size: 1.2em;
+    } 
+
+</style>
+<body>
+    <div class="container">
+
+        <h1><a href="/">Smart Lock Cloud</a> </h1>
+        <h2>Reservation</h2>
+        <form method="POST" id="reservationForm" onsubmit="return handleSubmit(event);">
+            <table>
+                <tr>
+                    <td><label for="">Room ID </label></td>
+                    <td>
+                        <select id="lock_id" name="lock_id">
+                            <option value="1" selected>Room 1</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="date">Date </label></td>
+                    <td>
+                        <select id="date" name="date">
+                            {%for date in dates %}
+                                <option value="{{ loop.index }}">{{date}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="time">Time</label></td>
+                    <td>
+                        <select id="session" name="session">
+                            {% for session in sessions %}
+                                <option value="{{ session }}">
+                                    {{ session }}:00 ~ {{ session + 1 }}:00
+                                </option>
+                            {% endfor %}
+                        </select> 
+                    </td>
+                </tr>
+            </table>  
+            <button type="submit" id="submitBtn">Submit</button>
+        </form> 
+
+    </div>
+
+
+    <script>
+        function handleSubmit(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+    
+            // Get the form element
+            const form = document.getElementById('reservationForm');
+            const selected = form.querySelectorAll('input[type="checkbox"]:checked');
+             
+    
+            // Optionally, process the data here (e.g., AJAX submission)
+    
+            // If validation passes, redirect to another page
+            window.location.href = '/templates/index.html';
+        }
+    </script>
+
+</body>
+</html>
