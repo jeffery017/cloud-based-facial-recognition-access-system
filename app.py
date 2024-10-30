@@ -9,7 +9,7 @@ from qdrant_client.models import Distance, VectorParams, PointStruct
 from uuid import uuid4
 import numpy as np
 import os
-import dotenv as load_dotenv
+from dotenv import load_dotenv
 
 load_dotenv()
 
