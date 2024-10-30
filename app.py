@@ -7,7 +7,6 @@ from routes.index import router as index_router
 from dotenv import load_dotenv
 from libs.db import Model
 
-load_dotenv()
 
 app = FastAPI()  
 app.include_router(index_router)
