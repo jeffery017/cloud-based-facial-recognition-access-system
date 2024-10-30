@@ -4,6 +4,8 @@ from pydantic import BaseModel
 import numpy as np
 from numpy.typing import NDArray
 from typing import Optional
+from libs.db import Model
+from qdrant_client import models
 
 debug = 0
 
@@ -66,21 +68,64 @@ async def unlock(data: RequestData, background_tasks: BackgroundTasks):
     logd(response)
     return response
 
-
+def checkEmbeddingType(embedding):
+    return True
 
 def getUserIdByEmbedding(embedding: NDArray)-> int:
     logd("Get user_id by embedding.")
+    client = Model.getClient()
+
+    search_result = client.search(
+        collection_name='RegisteredUsers',
+        query_vector=np.array(np.array(embedding)),
+        limit=1  # We only need the closest match
+    )
+
     if validate_user(valid_users, embedding):
         logd("user_id not found")
-    return 1 
+    return search_result[0].payload['uuid']
+
 
 def getSession(user_id: int, lock_id: int)->int:
     logd("Get session by user_id.")
+    #search through reservations for specified user id and lock id and return information
+    client = Model.getClient()
+    response = client.query_points(
+        collection_name="Reservations",
+        query_filter=models.Filter(
+            must=[
+                models.FieldCondition(
+                    key="uuid",
+                    match=models.MatchValue(
+                        value=user_id
+                    )
+                ),
+                models.FieldCondition(
+                    key="lock_id",
+                    match=models.MatchValue(
+                        value=lock_id
+                    )
+                )
+
+            ]
+        )
+    )
+
+
+    for point in response.points:
+        uuid = point.payload.get("uuid")
+        lock_id = point.payload.get("lock_id")
+        start_At = point.payload.get("startAt")
+        end_At = point.payload.get("endAt")
+
+    #verify attributes if needed (response userid and lockid must be matching with given parameters)
+
     return SessionData(
-        user_id=1, 
-        lock_id=1, 
-        startAt=1729039060.210011, 
-        endAt=1729040060.210011)
+        user_id=point.payload.get("uuid"),
+        lock_id=point.payload.get("lock_id"),
+        startAt=point.payload.get("start_At"),
+        endAt=point.payload.get("end_At")
+    )
 
 def logUnlockRequest(data: LogData)->None: 
     logd("Log the unlock request.") 
