@@ -3,13 +3,10 @@ import uvicorn
 from routes.unlock import router as unlock_router
 from routes.admin import router as admin_router
 from routes.user import router as user_router
-from routes.index import router as index_router
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
-from uuid import uuid4
-import numpy as np
-import os
+from routes.index import router as index_router 
+from qdrant_client.models import Distance, VectorParams 
 from dotenv import load_dotenv
+from libs.db import Model
 
 load_dotenv()
 
@@ -20,14 +17,8 @@ app.include_router(admin_router, prefix='/admin')
 app.include_router(user_router, prefix='/user')
 
 if __name__ == "__main__":  
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-    ak = os.getenv("QDRANT_API_KEY")
-    end = os.getenv("QDRANT_ENDPOINT")
-
-    client = QdrantClient(
-        url=end,
-        api_key=ak
-    )
+    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    client = Model.getClient()
 
     #delete user registry collection on start up (fresh database on launch)
     client.delete_collection(collection_name='RegisteredUsers')
